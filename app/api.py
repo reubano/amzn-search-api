@@ -1,19 +1,15 @@
 # -*- coding: utf-8 -*-
 
 """ Interface to Amazon API """
-
-
-import yaml
-
 from urllib2 import HTTPError
 from os import getenv
-from amazon.api import AmazonAPI
+from amazon.api import AmazonAPI, SearchException
 
 
 class Amazon(AmazonAPI):
 	"""An Amazon search"""
 
-	def __init__(self, key=None, secret=None, tag=None, **kwargs):
+	def __init__(self, **kwargs):
 		"""
 		Initialization method.
 
@@ -39,25 +35,9 @@ class Amazon(AmazonAPI):
 		Amazon country is None
 		<Lego.api.Amazon object at 0x...>
 		"""
-		try:
-			amazon = yaml.safe_load(file('amazon.yml', 'r'))
-		except IOError:
-			amazon = {}
-
-		key = (
-			key
-			or getenv('AWS_ACCESS_KEY_ID')
-			or amazon.get('AWS_ACCESS_KEY_ID', None))
-
-		secret = (
-			secret
-			or getenv('AWS_SECRET_ACCESS_KEY')
-			or amazon.get('AWS_SECRET_ACCESS_KEY', None))
-
-		tag = (
-			tag
-			or getenv('AWS_ASSOCIATE_TAG')
-			or amazon.get('AWS_ASSOCIATE_TAG', None))
+		key = (kwargs.get('key') or getenv('AWS_ACCESS_KEY_ID'))
+		secret = (kwargs.get('secret') or getenv('AWS_SECRET_ACCESS_KEY'))
+		tag = (kwargs.get('tag') or getenv('AWS_ASSOCIATE_TAG'))
 
 		if not (key and secret and tag):
 			raise SystemExit('Error getting Amazon credentials.')
