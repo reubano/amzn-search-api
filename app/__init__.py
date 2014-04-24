@@ -83,7 +83,7 @@ def create_app(config_mode=None, config_file=None):
 	@app.route('%s/search/' % app.config['API_URL_PREFIX'])
 	def search():
 		args = request.args.to_dict()
-		limit = args.get('limit', 1)
+		limit = int(args.get('limit', 1))
 		region = args.get('region', 'US')
 		amazon = Amazon(region=region)
 
