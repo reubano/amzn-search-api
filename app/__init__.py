@@ -105,7 +105,8 @@ def create_app(config_mode=None, config_file=None):
 
 		return jsonify({'objects': result}, status)
 
-	@app.route('/reset/', methods=['GET'])
+	@app.route('/api/reset/')
+	@app.route('%s/reset/' % app.config['API_URL_PREFIX'])
 	def reset():
 		cache.clear()
 		return jsonify({'objects': "Caches reset"})
