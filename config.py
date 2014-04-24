@@ -12,6 +12,7 @@ class Config(object):
 	HEROKU = os.environ.get('DATABASE_URL', False)
 
 	DEBUG = False
+	DEBUG_MEMCACHE = True
 	ADMINS = frozenset([__YOUR_EMAIL__])
 	TESTING = False
 	HOST = '127.0.0.1'
@@ -31,7 +32,9 @@ class Production(Config):
 
 class Development(Config):
 	DEBUG = True
+	DEBUG_MEMCACHE = False
 
 
 class Test(Config):
 	TESTING = True
+	DEBUG_MEMCACHE = False
