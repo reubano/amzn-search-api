@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 """ Interface to Amazon API """
-from urllib2 import HTTPError
 from os import getenv
 from amazon.api import AmazonAPI
 
@@ -32,8 +31,7 @@ class Amazon(AmazonAPI):
 		Examples
 		--------
 		>>> Amazon()  #doctest: +ELLIPSIS
-		Amazon country is None
-		<Lego.api.Amazon object at 0x...>
+		<app.api.Amazon object at 0x...>
 		"""
 		key = (kwargs.get('key') or getenv('AWS_ACCESS_KEY_ID'))
 		secret = (kwargs.get('secret') or getenv('AWS_SECRET_ACCESS_KEY'))
@@ -58,31 +56,26 @@ class Amazon(AmazonAPI):
 
 		Examples
 		--------
-		>>> request = Request()
 		>>> amazon = Amazon()
-		Amazon country is None
-		>>> search_kwargs = request.get_amzn_search_kwargs('lego')
-		>>> amzn_response = amazon.search(**search_kwargs)
+		>>> kwargs = {'SearchIndex': 'All', 'Keywords': 'Harry Potter', \
+'ResponseGroup': 'Medium'}
+		>>> amzn_response = amazon.search_n(1, **kwargs)
 		>>> amazon.parse(amzn_response)[0].keys()
-		['amzn_sales_rank', 'amzn_asin', 'amzn_price', 'amzn_title', \
-'ebay_model', 'amzn_model', 'amzn_url']
+		['asin', 'title', 'url', 'price', 'currency', 'sales_rank', 'model']
 		"""
 		items = []
 
-		try:
-			for r in response:
-				item = {
-					'asin': r.asin,
-					'model': r.model,
-					'url': r.offer_url,
-					'title': r.title,
-					'price': (r.price_and_currency[0] or 0),
-					'currency': r.price_and_currency[1],
-					'sales_rank': r._safe_get_element_text('SalesRank'),
-				}
+		for r in response:
+			item = {
+				'asin': r.asin,
+				'model': r.model,
+				'url': r.offer_url,
+				'title': r.title,
+				'price': (r.price_and_currency[0] or 0),
+				'currency': r.price_and_currency[1],
+				'sales_rank': r._safe_get_element_text('SalesRank'),
+			}
 
-				items.append(item)
-		except HTTPError:
-			pass
+			items.append(item)
 
 		return items
