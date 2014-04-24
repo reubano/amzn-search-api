@@ -7,9 +7,10 @@
 """
 import config
 
+from os import environ
 from json import JSONEncoder, dumps
-from api import Amazon, SearchException
-from pprint import pprint
+from api import Amazon
+from amazon.api import SearchException
 from flask import Flask, redirect, url_for, request, make_response
 from flask.ext.cache import Cache
 
@@ -39,6 +40,7 @@ def corsify(response, methods):
 	response.headers['Access-Control-Allow-Credentials'] = 'true'
 	return response
 
+
 def create_app(config_mode=None, config_file=None):
 	# Create webapp instance
 	app = Flask(__name__)
@@ -63,7 +65,8 @@ def create_app(config_mode=None, config_file=None):
 		cache_config = {
 			'CACHE_TYPE': 'memcached',
 			'CACHE_MEMCACHED_SERVERS': [environ.get('MEMCACHE_SERVERS')]}
- 	else: cache_config['CACHE_TYPE'] = 'simple'
+	else:
+		cache_config['CACHE_TYPE'] = 'simple'
 
 	cache.init_app(app, config=cache_config)
 

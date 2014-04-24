@@ -3,7 +3,7 @@
 """ Interface to Amazon API """
 from urllib2 import HTTPError
 from os import getenv
-from amazon.api import AmazonAPI, SearchException
+from amazon.api import AmazonAPI
 
 
 class Amazon(AmazonAPI):
