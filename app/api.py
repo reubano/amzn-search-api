@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
 
 """ Interface to Amazon API """
-
-
-import yaml
-
-from urllib2 import HTTPError
 from os import getenv
 from amazon.api import AmazonAPI
 
@@ -13,7 +8,7 @@ from amazon.api import AmazonAPI
 class Amazon(AmazonAPI):
 	"""An Amazon search"""
 
-	def __init__(self, key=None, secret=None, tag=None, **kwargs):
+	def __init__(self, region='US', **kwargs):
 		"""
 		Initialization method.
 
@@ -36,28 +31,11 @@ class Amazon(AmazonAPI):
 		Examples
 		--------
 		>>> Amazon()  #doctest: +ELLIPSIS
-		Amazon country is None
-		<Lego.api.Amazon object at 0x...>
+		<app.api.Amazon object at 0x...>
 		"""
-		try:
-			amazon = yaml.safe_load(file('amazon.yml', 'r'))
-		except IOError:
-			amazon = {}
-
-		key = (
-			key
-			or getenv('AWS_ACCESS_KEY_ID')
-			or amazon.get('AWS_ACCESS_KEY_ID', None))
-
-		secret = (
-			secret
-			or getenv('AWS_SECRET_ACCESS_KEY')
-			or amazon.get('AWS_SECRET_ACCESS_KEY', None))
-
-		tag = (
-			tag
-			or getenv('AWS_ASSOCIATE_TAG')
-			or amazon.get('AWS_ASSOCIATE_TAG', None))
+		key = kwargs.pop('key', getenv('AWS_ACCESS_KEY_ID'))
+		secret = kwargs.pop('secret', getenv('AWS_SECRET_ACCESS_KEY'))
+		tag = kwargs.pop('tag', getenv('AWS_ASSOCIATE_TAG'))
 
 		if not (key and secret and tag):
 			raise SystemExit('Error getting Amazon credentials.')
@@ -78,31 +56,26 @@ class Amazon(AmazonAPI):
 
 		Examples
 		--------
-		>>> request = Request()
 		>>> amazon = Amazon()
-		Amazon country is None
-		>>> search_kwargs = request.get_amzn_search_kwargs('lego')
-		>>> amzn_response = amazon.search(**search_kwargs)
+		>>> kwargs = {'SearchIndex': 'All', 'Keywords': 'Harry Potter', \
+'ResponseGroup': 'Medium'}
+		>>> amzn_response = amazon.search_n(1, **kwargs)
 		>>> amazon.parse(amzn_response)[0].keys()
-		['amzn_sales_rank', 'amzn_asin', 'amzn_price', 'amzn_title', \
-'ebay_model', 'amzn_model', 'amzn_url']
+		['asin', 'title', 'url', 'price', 'currency', 'sales_rank', 'model']
 		"""
 		items = []
 
-		try:
-			for r in response:
-				item = {
-					'asin': r.asin,
-					'model': r.model,
-					'url': r.offer_url,
-					'title': r.title,
-					'price': (r.price_and_currency[0] or 0),
-					'currency': r.price_and_currency[1],
-					'sales_rank': r._safe_get_element_text('SalesRank'),
-				}
+		for r in response:
+			item = {
+				'asin': r.asin,
+				'model': r.model,
+				'url': r.offer_url,
+				'title': r.title,
+				'price': (r.price_and_currency[0] or 0),
+				'currency': r.price_and_currency[1],
+				'sales_rank': r._safe_get_element_text('SalesRank'),
+			}
 
-				items.append(item)
-		except HTTPError:
-			pass
+			items.append(item)
 
 		return items
