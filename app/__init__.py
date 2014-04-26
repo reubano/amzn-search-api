@@ -86,10 +86,9 @@ def create_app(config_mode=None, config_file=None):
 	@app.route('%s/search/' % app.config['API_URL_PREFIX'])
 	@cache.cached(timeout=search_cache_timeout, key_prefix=make_cache_key)
 	def search():
-		args = request.args.to_dict()
-		limit = int(args.get('limit', 1))
-		region = args.get('region', 'US')
-		amazon = Amazon(region=region)
+		kwargs = request.args.to_dict()
+		limit = int(kwargs.pop('limit', 1))
+		amazon = Amazon(**kwargs)
 
 		kwargs = {
 			'Condition': 'New',
