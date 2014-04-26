@@ -40,6 +40,9 @@ def corsify(response, methods):
 	response.headers['Access-Control-Allow-Credentials'] = 'true'
 	return response
 
+def make_cache_key(*args, **kwargs):
+	return request.url
+
 
 def create_app(config_mode=None, config_file=None):
 	# Create webapp instance
@@ -81,7 +84,7 @@ def create_app(config_mode=None, config_file=None):
 
 	@app.route('/api/search/')
 	@app.route('%s/search/' % app.config['API_URL_PREFIX'])
-	@cache.cached(timeout=search_cache_timeout)
+	@cache.cached(timeout=search_cache_timeout, key_prefix=make_cache_key)
 	def search():
 		args = request.args.to_dict()
 		limit = int(args.get('limit', 1))
