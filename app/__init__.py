@@ -39,6 +39,7 @@ def corsify(response, methods):
 	response.headers['Access-Control-Allow-Credentials'] = 'true'
 	return response
 
+
 def make_cache_key(*args, **kwargs):
 	return request.url
 
@@ -89,13 +90,13 @@ def create_app(config_mode=None, config_file=None):
 		limit = int(kwargs.pop('limit', 1))
 		amazon = Amazon(**kwargs)
 
-		kwargs = {
+		new = {
 			'Condition': 'New',
 			'SearchIndex': 'All',
 			'ResponseGroup': 'Medium',
 		}
 
-		kwargs.update(args)
+		kwargs.update(new)
 
 		try:
 			response = amazon.search_n(limit, **kwargs)
