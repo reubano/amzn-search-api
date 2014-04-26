@@ -31,7 +31,7 @@ def corsify(response, methods):
 	headers = 'Origin, X-Requested-With, Content-Type, Accept'
 
 	for m in methods:
-		allow += ', %s' % m
+		base += ', %s' % m
 
 	response.headers['Access-Control-Allow-Origin'] = '*'
 	response.headers['Access-Control-Allow-Methods'] = base
