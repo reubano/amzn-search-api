@@ -27,16 +27,15 @@ def jsonify(result, status=200):
 
 
 def corsify(response, methods):
-	allow = 'HEAD, OPTIONS'
+	base = 'HEAD, OPTIONS'
+	headers = 'Origin, X-Requested-With, Content-Type, Accept'
 
 	for m in methods:
 		allow += ', %s' % m
 
 	response.headers['Access-Control-Allow-Origin'] = '*'
-	response.headers['Access-Control-Allow-Methods'] = allow
-	response.headers['Access-Control-Allow-Headers'] = (
-		'Origin, X-Requested-With, Content-Type, Accept')
-
+	response.headers['Access-Control-Allow-Methods'] = base
+	response.headers['Access-Control-Allow-Headers'] = headers
 	response.headers['Access-Control-Allow-Credentials'] = 'true'
 	return response
 
