@@ -9,7 +9,7 @@ __YOUR_EMAIL__ = '%s@gmail.com' % _user
 # configuration
 class Config(object):
 	app = 'amzn-search-api'
-	HEROKU = os.environ.get('DATABASE_URL', False)
+	HEROKU = os.environ.get('HEROKU', False)
 
 	DEBUG = False
 	DEBUG_MEMCACHE = True
