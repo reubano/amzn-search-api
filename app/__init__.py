@@ -17,9 +17,9 @@ from flask.ext.cache import Cache
 cache = Cache()
 search_cache_timeout = 1 * 60 * 60  # hours (in seconds)
 
-
-def jsonify(result, status=200):
-	response = make_response(dumps(result, cls=CustomEncoder))
+def jsonify(status=200, indent=2, sort_keys=True, **kwargs):
+	options = {'indent': indent, 'sort_keys': sort_keys}
+	response = make_response(dumps(kwargs, cls=CustomEncoder, **options))
 	response.headers['Content-Type'] = 'application/json; charset=utf-8'
 	response.headers['mimetype'] = 'application/json'
 	response.status_code = status
@@ -106,14 +106,14 @@ def create_app(config_mode=None, config_file=None):
 			result = err.message
 			status = 500
 
-		return jsonify({'objects': result}, status)
+		return jsonify(status, objects=result)
 
 	@app.route('/api/reset/')
 	@app.route('%s/reset/' % app.config['API_URL_PREFIX'])
 	@cache.cached(timeout=search_cache_timeout)
 	def reset():
 		cache.clear()
-		return jsonify({'objects': "Caches reset"})
+		return jsonify(objects="Caches reset")
 
 	@app.after_request
 	def add_cors_header(response):
