@@ -7,8 +7,11 @@ __YOUR_EMAIL__ = '%s@gmail.com' % _user
 # configuration
 class Config(object):
 	app = 'amzn-search-api'
-	HEROKU = getenv('HEROKU', False)
+	stage = getenv('STAGE', False)
+	end = '-stage' if stage else ''
+	heroku_server = '%s%s.herokuapp.com' % (app, end)
 
+	HEROKU = getenv('HEROKU', False)
 	DEBUG = False
 	DEBUG_MEMCACHE = True
 	ADMINS = frozenset([__YOUR_EMAIL__])
@@ -16,7 +19,7 @@ class Config(object):
 	HOST = '127.0.0.1'
 
 	if HEROKU:
-		SERVER_NAME = '%s.herokuapp.com' % app
+		SERVER_NAME = heroku_server
 
 	SECRET_KEY = getenv('SECRET_KEY', 'key')
 	API_METHODS = ['GET']
