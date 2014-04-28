@@ -1,9 +1,14 @@
 from os import getenv
 from slugify import slugify
 
+# module vars
 _user = getenv('USER', getenv('USERNAME', 'default'))
+
+# configurable vars
 __APP_NAME__ = 'AMZN Search API'
+__YOUR_NAME__ = 'Reuben Cummings'
 __YOUR_EMAIL__ = '%s@gmail.com' % _user
+__YOUR_WEBSITE__ = 'http://%s.github.com' % _user
 
 
 # configuration
