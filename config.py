@@ -1,15 +1,15 @@
-import os
 from os import path as p
+from os import getenv
 
 _basedir = p.dirname(__file__)
-_user = os.environ.get('USER', os.environ.get('USERNAME', 'default'))
+_user = getenv('USER', getenv('USERNAME', 'default'))
 __YOUR_EMAIL__ = '%s@gmail.com' % _user
 
 
 # configuration
 class Config(object):
 	app = 'amzn-search-api'
-	HEROKU = os.environ.get('HEROKU', False)
+	HEROKU = getenv('HEROKU', False)
 
 	DEBUG = False
 	DEBUG_MEMCACHE = True
@@ -20,7 +20,7 @@ class Config(object):
 	if HEROKU:
 		SERVER_NAME = '%s.herokuapp.com' % app
 
-	SECRET_KEY = os.environ.get('SECRET_KEY', 'key')
+	SECRET_KEY = getenv('SECRET_KEY', 'key')
 	API_METHODS = ['GET']
 	API_MAX_RESULTS_PER_PAGE = 1000
 	API_URL_PREFIX = '/api/v1'

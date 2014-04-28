@@ -7,7 +7,7 @@
 """
 import config
 
-from os import environ
+from os import getenv
 from json import JSONEncoder, dumps
 from api import Amazon
 from amazon.api import SearchException
@@ -58,16 +58,12 @@ def create_app(config_mode=None, config_file=None):
 
 	if app.config['HEROKU']:
 		cache_config['CACHE_TYPE'] = 'spreadsaslmemcachedcache'
-		cache_config.setdefault('CACHE_MEMCACHED_SERVERS',
-			[environ.get('MEMCACHIER_SERVERS')])
-		cache_config.setdefault('CACHE_MEMCACHED_USERNAME',
-			environ.get('MEMCACHIER_USERNAME'))
-		cache_config.setdefault('CACHE_MEMCACHED_PASSWORD',
-			environ.get('MEMCACHIER_PASSWORD'))
+		cache_config['CACHE_MEMCACHED_SERVERS'] = [getenv('MEMCACHIER_SERVERS')]
+		cache_config['CACHE_MEMCACHED_USERNAME'] = getenv('MEMCACHIER_USERNAME')
+		cache_config['CACHE_MEMCACHED_PASSWORD'] = getenv('MEMCACHIER_PASSWORD')
 	elif app.config['DEBUG_MEMCACHE']:
-		cache_config = {
-			'CACHE_TYPE': 'memcached',
-			'CACHE_MEMCACHED_SERVERS': [environ.get('MEMCACHE_SERVERS')]}
+		cache_config['CACHE_TYPE'] = 'memcached'
+		cache_config['CACHE_MEMCACHED_SERVERS'] = [getenv('MEMCACHE_SERVERS')]
 	else:
 		cache_config['CACHE_TYPE'] = 'simple'
 
