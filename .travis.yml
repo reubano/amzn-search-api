@@ -5,17 +5,22 @@ python:
   - "2.6"
   - "pypy"
 
+notifications:
+  email:
+    on_success: always
+
 install: pip install -r requirements/test.txt
 script: python manage.py test
 
 after_success:
-  # check for pull request
+  # check for pull request and correct python version
   - if [[ "$TRAVIS_PULL_REQUEST" == "true" ]]; then exit 0; fi
+  - if [[ "$TRAVIS_PYTHON_VERSION" != "2.7" ]]; then exit 0; fi
 
-  # Install heroku toolbelt and add remote repo
+  # Install heroku toolbelt
   - wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
 
-  # check branch for conditional remote add
+  # check branch to conditionally add remote repo
   - REPO_NAME=`basename $TRAVIS_REPO_SLUG`
   - if [[ "$TRAVIS_BRANCH" == "master" ]]; then git remote add production git@heroku.com:${REPO_NAME}.git; fi
   - if [[ "$TRAVIS_BRANCH" == "features" ]]; then git remote add staging git@heroku.com:${REPO_NAME}.git; fi
