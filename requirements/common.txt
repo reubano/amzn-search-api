@@ -8,6 +8,7 @@ Werkzeug==0.9.4
 bottlenose==0.6.0
 itsdangerous==0.24
 lxml==3.3.5
+newrelic==2.18.1.15
 python-amazon-simple-product-api==1.4.0
 python-dateutil==2.2
 requests==2.2.1
