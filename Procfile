@@ -1,1 +1,1 @@
-web: gunicorn app:create_app\(\'Production\'\) -w 3 -k gevent
+web: newrelic-admin run-program gunicorn app:create_app\(\'Production\'\) -w 3 -k gevent
