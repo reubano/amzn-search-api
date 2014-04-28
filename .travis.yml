@@ -3,7 +3,6 @@
 language: python
 
 python:
-  - "3.3"
   - "2.7"
   - "2.6"
   - "pypy"
@@ -35,9 +34,3 @@ after_success:
   - if [[ "$TRAVIS_BRANCH" == "master" ]]; then yes | git push production master; fi
   - if [[ "$TRAVIS_BRANCH" == "features" ]]; then yes | git push staging features:master; fi
 
-AWS_ACCESS_KEY_ID:
-  secure: XHQglNovdF53LzitzRI5bQxwqP1s2FRhVqVe2mtQnX3fKKWcF9uyX6stjsOFrKccG1T5LN6c6wz/92JiPR8kASZ/tYbct1bVctcCVAn+g8CpolIgJAHTx1AkmYr5l1z/+Rhbw4Xp3uUvzuZYPzN1WLXuEgS/MePVu1KaV+G9vr0=
-AWS_SECRET_ACCESS_KEY:
-  secure: N+xY8u2XVlqHZNZZQXsgdVDtnYscJkAkhNCsXL0r4UhLg4jL5ys594tVcEwpwT7RvsEhm5h0zTkLMkpyQofg8FpWCj18k9AamPZkEG43el7jvG8L1WGHhGrm/HPQsU8HdcFq8D/yG6vsKTlAQFrV2hZeuUl60gcsO4osl20eJxs=
-AWS_ASSOCIATE_TAG:
-  secure: JXKv8IE4IChsPAk2SUiduHB2ZLC0tnlE6IRbIZvgZuRsU/pCcURawOuFAUdjM38RBm0ZvL9Oy0UcaHjCsWvXaUsJff9wGTBz9XZ03jzK5FW1ibtxOrBTIGz1tm72HR6JFJNmvRIHzoolY8spLS/uLZ2uB3n65ZsXM5tbG+QdQ+I=
