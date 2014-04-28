@@ -77,7 +77,7 @@ def create_app(config_mode=None, config_file=None):
 	@app.route('/api/')
 	@app.route('%s/' % app.config['API_URL_PREFIX'])
 	def api():
-		return 'Welcome to the Amazon Search API!'
+		return 'Welcome to the %s!' % app.config['APP_NAME']
 
 	@app.route('/api/search/')
 	@app.route('%s/search/' % app.config['API_URL_PREFIX'])

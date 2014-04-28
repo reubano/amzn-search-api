@@ -1,16 +1,19 @@
 from os import getenv
+from slugify import slugify
 
 _user = getenv('USER', getenv('USERNAME', 'default'))
+__APP_NAME__ = 'AMZN Search API'
 __YOUR_EMAIL__ = '%s@gmail.com' % _user
 
 
 # configuration
 class Config(object):
-	app = 'amzn-search-api'
+	app = slugify(__APP_NAME__)
 	stage = getenv('STAGE', False)
 	end = '-stage' if stage else ''
 	heroku_server = '%s%s.herokuapp.com' % (app, end)
 
+	APP_NAME = __APP_NAME__
 	HEROKU = getenv('HEROKU', False)
 	DEBUG = False
 	DEBUG_MEMCACHE = True
