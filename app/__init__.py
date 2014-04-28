@@ -17,6 +17,7 @@ from flask.ext.cache import Cache
 cache = Cache()
 search_cache_timeout = 1 * 60 * 60  # hours (in seconds)
 
+
 def jsonify(status=200, indent=2, sort_keys=True, **kwargs):
 	options = {'indent': indent, 'sort_keys': sort_keys}
 	response = make_response(dumps(kwargs, cls=CustomEncoder, **options))

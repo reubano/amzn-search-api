@@ -1,7 +1,5 @@
-from os import path as p
 from os import getenv
 
-_basedir = p.dirname(__file__)
 _user = getenv('USER', getenv('USERNAME', 'default'))
 __YOUR_EMAIL__ = '%s@gmail.com' % _user
 
