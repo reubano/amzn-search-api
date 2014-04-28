@@ -1,5 +1,3 @@
-# Config file for automatic testing at travis-ci.org
-
 language: python
 
 python:
@@ -34,3 +32,9 @@ after_success:
   - if [[ "$TRAVIS_BRANCH" == "master" ]]; then yes | git push production master; fi
   - if [[ "$TRAVIS_BRANCH" == "features" ]]; then yes | git push staging features:master; fi
 
+env:
+  global:
+  - secure: iEsaA6sDaV4NDGD6H6ivmr04UMmnMAclzEqesuB/lg/ge7xhYqwmpFuQXI1ZnojrUP4kWfNlAUitNa4CQxxA0iPnHAsnmSXPv9h7K/iltL99CiyKA6xZ0c675p1O/OI4Efe7tKaOKdEXz4I8uPbxxGVTMVpH4/TQJqwpSnFwhGM=
+  - secure: kCSKZw4q5aHCDqkFf277dupkgfx1rLPJq2HPKMWTQU+n+aDm6FsVc6R6e0Y5mzseaj6lKyAwwriCH/+jYUejSLP4hoa4MhvIxIYrOar9YjEG8Gj0Xix6T8Cxli2AHF6jxktBjokegLguYhYR3tCyJw4MWMRLl7Gg+bbaYRjhQAE=
+  - secure: oHOOp/t3Yte3JJXhjyA1s89TCxuYexUSQhj+3eGRrXwI2eAZsdOxZCCcf3M5CV4JIh2YjHr2ixUAdkWxd93dj/ecaRbu+zQQH/kDWwzjUHolwz/2KCKNNej6slQZ8lak5ymoheTe5Z08s9n3SdUj53FuVRSsTlckwC3E7vRz4bg=
+  - secure: ZcsuZAHwhD0S3by2L88vH0FVM6vo3gTyilD4LGi8YmRH+XMP6UFj5cxnlSRBqNdVuJJeoAIsVFhudtuJ/mi6keT8NCCAg68HPgTsdkE0qXHx55+O+P2eOgeDJfbzPgy6o5cU8yMpWmOnLBs1e09fbk5A/HIzWd9g+qF+VP1ZbOg=
