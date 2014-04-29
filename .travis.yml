@@ -23,7 +23,7 @@ after_success:
   # check branch to conditionally add remote repo
   - REPO_NAME=`basename $TRAVIS_REPO_SLUG`
   - if [[ "$TRAVIS_BRANCH" == "master" ]]; then git remote add production git@heroku.com:${REPO_NAME}.git; fi
-  - if [[ "$TRAVIS_BRANCH" == "features" ]]; then git remote add staging git@heroku.com:${REPO_NAME}.git; fi
+  - if [[ "$TRAVIS_BRANCH" == "features" ]]; then git remote add staging git@heroku.com:${REPO_NAME}-stage.git; fi
 
   # Turn off warnings about SSH keys:
   - echo "Host heroku.com" >> ~/.ssh/config
