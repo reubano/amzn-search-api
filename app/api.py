@@ -56,15 +56,14 @@ class Amazon(AmazonAPI):
 
 		Examples
 		--------
-		>>> amazon = Amazon()
+		>>> amazon = Amazon(region='UK')
 		>>> kwargs = {'SearchIndex': 'All', 'Keywords': 'Harry Potter', \
 'ResponseGroup': 'Medium'}
 		>>> amzn_response = amazon.search_n(1, **kwargs)
-		>>> amazon.parse(amzn_response)[0].keys()
+		>>> parsed = amazon.parse(amzn_response)
+		>>> parsed[0].keys()
 		['asin', 'title', 'url', 'price', 'currency', 'sales_rank', 'model']
-		>>> amazon = Amazon(region='UK')
-		>>> amzn_response = amazon.search_n(1, **kwargs)
-		>>> url = amazon.parse(amzn_response)[0]['url']
+		>>> url = parsed[0]['url']
 		>>> '.'.join(url.split('/')[2].split('.')[2:])
 		'co.uk'
 		"""
