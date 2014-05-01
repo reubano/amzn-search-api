@@ -36,7 +36,6 @@ class Amazon(AmazonAPI):
 		key = kwargs.pop('key', getenv('AWS_ACCESS_KEY_ID'))
 		secret = kwargs.pop('secret', getenv('AWS_SECRET_ACCESS_KEY'))
 		tag = kwargs.pop('tag', getenv('AWS_ASSOCIATE_TAG'))
-		region = kwargs.pop('region', 'US')
 
 		if not (key and secret and tag):
 			raise SystemExit('Error getting Amazon credentials.')
@@ -57,12 +56,16 @@ class Amazon(AmazonAPI):
 
 		Examples
 		--------
-		>>> amazon = Amazon()
+		>>> amazon = Amazon(region='UK')
 		>>> kwargs = {'SearchIndex': 'All', 'Keywords': 'Harry Potter', \
 'ResponseGroup': 'Medium'}
 		>>> amzn_response = amazon.search_n(1, **kwargs)
-		>>> amazon.parse(amzn_response)[0].keys()
+		>>> parsed = amazon.parse(amzn_response)
+		>>> parsed[0].keys()
 		['asin', 'title', 'url', 'price', 'currency', 'sales_rank', 'model']
+		>>> url = parsed[0]['url']
+		>>> '.'.join(url.split('/')[2].split('.')[2:])
+		'co.uk'
 		"""
 		items = []
 

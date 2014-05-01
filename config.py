@@ -16,6 +16,7 @@ class Config(object):
 	app = slugify(__APP_NAME__)
 	stage = getenv('STAGE', False)
 	end = '-stage' if stage else ''
+	# TODO: programatically get app name
 	heroku_server = '%s%s.herokuapp.com' % (app, end)
 
 	APP_NAME = __APP_NAME__
@@ -29,7 +30,6 @@ class Config(object):
 	if HEROKU:
 		SERVER_NAME = heroku_server
 
-	SECRET_KEY = getenv('SECRET_KEY', 'key')
 	API_METHODS = ['GET']
 	API_MAX_RESULTS_PER_PAGE = 1000
 	API_URL_PREFIX = '/api/v1'
