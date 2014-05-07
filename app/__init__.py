@@ -11,6 +11,7 @@ from os import getenv
 from json import JSONEncoder, dumps
 from api import Amazon
 from amazon.api import SearchException
+from urllib2 import HTTPError
 from flask import Flask, redirect, url_for, request, make_response
 from flask.ext.cache import Cache
 
@@ -102,6 +103,9 @@ def create_app(config_mode=None, config_file=None):
 		except SearchException as err:
 			result = err.message
 			status = 500
+		except HTTPError:
+			result = 'Service Unavailable'
+			status = 503
 
 		return jsonify(status, objects=result)
 
