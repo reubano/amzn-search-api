@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os.path as p
 
-from subprocess import call, check_call
+from subprocess import call
 from flask.ext.script import Manager
 from app import create_app
 
