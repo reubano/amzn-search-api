@@ -24,10 +24,10 @@ def lint(file):
 	return call("flake8 %s" % file, shell=True)
 
 
-@manager.command
-def test():
-	"""Run nosetests"""
-	check_call('nosetests -xv', shell=True)
+@manager.option('-w', '--where', help='Requirement file', default='')
+def test(where):
+	"""Run nose tests"""
+	return call("nosetests -xvw %s" % where, shell=True)
 
 
 @manager.option('-r', '--requirement', help='Requirement file', default='test')
