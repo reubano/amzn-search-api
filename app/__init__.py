@@ -107,7 +107,6 @@ def create_app(config_mode=None, config_file=None):
 		except HTTPError:
 			result = 'Service Unavailable'
 			status = 503
-			cache.delete(request.url)
 
 		return jsonify(status, objects=result)
 
@@ -116,6 +115,13 @@ def create_app(config_mode=None, config_file=None):
 	@cache.cached(timeout=search_cache_timeout, key_prefix=make_cache_key)
 	def lorum():
 		return jsonify(objects=get_sentences(1)[0])
+
+	@app.route('/api/delete/<base>/')
+	@app.route('%s/delete/<base>/' % app.config['API_URL_PREFIX'])
+	def delete(base):
+		url = request.url.replace('delete/', '')
+		cache.delete(url)
+		return jsonify(objects="Key: %s deleted" % url)
 
 	@app.route('/api/reset/')
 	@app.route('%s/reset/' % app.config['API_URL_PREFIX'])
