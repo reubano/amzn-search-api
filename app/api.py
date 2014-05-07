@@ -18,7 +18,7 @@ class Amazon(AmazonAPI):
 		secret : AWS_SECRET_ACCESS_KEY
 		tag : AWS_ASSOCIATE_TAG
 		region : string
-			one of  ['US', 'FR', 'UK', 'CA', 'DE', 'JP', 'IT', 'ES']
+			one of  ['US', 'UK', 'FR', 'DE', 'IT', 'ES', 'CA', 'JP']
 
 		Keyword Arguments
 		-----------------
@@ -33,6 +33,7 @@ class Amazon(AmazonAPI):
 		>>> Amazon()  #doctest: +ELLIPSIS
 		<app.api.Amazon object at 0x...>
 		"""
+		self.region = region
 		key = kwargs.pop('key', getenv('AWS_ACCESS_KEY_ID'))
 		secret = kwargs.pop('secret', getenv('AWS_SECRET_ACCESS_KEY'))
 		tag = kwargs.pop('tag', getenv('AWS_ASSOCIATE_TAG_%s' % region, 'na'))
@@ -61,8 +62,9 @@ class Amazon(AmazonAPI):
 'ResponseGroup': 'Medium'}
 		>>> amzn_response = amazon.search_n(1, **kwargs)
 		>>> parsed = amazon.parse(amzn_response)
-		>>> parsed[0].keys()
-		['asin', 'title', 'url', 'price', 'currency', 'sales_rank', 'model']
+		>>> sorted(parsed[0].keys())
+		['asin', 'country', 'currency', 'model', 'price', 'sales_rank', \
+'title', 'url']
 		>>> url = parsed[0]['url']
 		>>> '.'.join(url.split('/')[2].split('.')[2:])
 		'co.uk'
@@ -76,6 +78,7 @@ class Amazon(AmazonAPI):
 				'url': r.offer_url,
 				'title': r.title,
 				'price': (r.price_and_currency[0] or 0),
+				'country': self.region,
 				'currency': r.price_and_currency[1],
 				'sales_rank': r._safe_get_element_text('SalesRank'),
 			}
