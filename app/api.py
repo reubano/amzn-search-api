@@ -35,7 +35,7 @@ class Amazon(AmazonAPI):
 		"""
 		key = kwargs.pop('key', getenv('AWS_ACCESS_KEY_ID'))
 		secret = kwargs.pop('secret', getenv('AWS_SECRET_ACCESS_KEY'))
-		tag = kwargs.pop('tag', getenv('AWS_ASSOCIATE_TAG'))
+		tag = kwargs.pop('tag', getenv('AWS_ASSOCIATE_TAG_%s' % region, 'na'))
 
 		if not (key and secret and tag):
 			raise SystemExit('Error getting Amazon credentials.')
