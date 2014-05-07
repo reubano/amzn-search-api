@@ -62,8 +62,9 @@ class Amazon(AmazonAPI):
 'ResponseGroup': 'Medium'}
 		>>> amzn_response = amazon.search_n(1, **kwargs)
 		>>> parsed = amazon.parse(amzn_response)
-		>>> parsed[0].keys()
-		['asin', 'title', 'url', 'price', 'currency', 'sales_rank', 'model']
+		>>> sorted(parsed[0].keys())
+		['asin', 'country', 'currency', 'model', 'price', 'sales_rank', \
+'title', 'url']
 		>>> url = parsed[0]['url']
 		>>> '.'.join(url.split('/')[2].split('.')[2:])
 		'co.uk'
