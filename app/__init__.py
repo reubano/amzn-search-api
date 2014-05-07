@@ -106,6 +106,7 @@ def create_app(config_mode=None, config_file=None):
 		except HTTPError:
 			result = 'Service Unavailable'
 			status = 503
+			cache.delete(request.url)
 
 		return jsonify(status, objects=result)
 
