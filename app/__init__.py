@@ -14,6 +14,7 @@ from amazon.api import SearchException
 from urllib2 import HTTPError
 from flask import Flask, redirect, url_for, request, make_response
 from flask.ext.cache import Cache
+from loremipsum import get_sentences
 
 cache = Cache()
 search_cache_timeout = 1 * 60 * 60  # hours (in seconds)
@@ -106,13 +107,24 @@ def create_app(config_mode=None, config_file=None):
 		except HTTPError:
 			result = 'Service Unavailable'
 			status = 503
-			cache.delete(request.url)
 
 		return jsonify(status, objects=result)
 
+	@app.route('/api/lorum/')
+	@app.route('%s/lorum/' % app.config['API_URL_PREFIX'])
+	@cache.cached(timeout=search_cache_timeout, key_prefix=make_cache_key)
+	def lorum():
+		return jsonify(objects=get_sentences(1)[0])
+
+	@app.route('/api/delete/<base>/')
+	@app.route('%s/delete/<base>/' % app.config['API_URL_PREFIX'])
+	def delete(base):
+		url = request.url.replace('delete/', '')
+		cache.delete(url)
+		return jsonify(objects="Key: %s deleted" % url)
+
 	@app.route('/api/reset/')
 	@app.route('%s/reset/' % app.config['API_URL_PREFIX'])
-	@cache.cached(timeout=search_cache_timeout)
 	def reset():
 		cache.clear()
 		return jsonify(objects="Caches reset")
