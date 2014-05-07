@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os.path as p
 
-from subprocess import call, check_call
+from subprocess import call
 from flask.ext.script import Manager
 from app import create_app
 
@@ -13,21 +13,22 @@ manager.add_option('-f', '--cfgfile', dest='config_file', type=p.abspath)
 @manager.command
 def checkstage():
 	"""Checks staged with git pre-commit hook"""
-	path = p.join(p.dirname(__file__), 'app', 'tests', 'test.sh')
+	path = p.join(p.dirname(__file__), 'tests', 'test.sh')
 	cmd = "sh %s" % path
 	return call(cmd, shell=True)
 
 
-@manager.command
-def lint():
+@manager.option('-F', '--file', help='Lint file', default='')
+def lint(file):
 	"""Check style with flake8"""
-	call('flake8', shell=True)
+	return call("flake8 %s" % file, shell=True)
 
 
-@manager.command
-def test():
-	"""Run nosetests"""
-	check_call('nosetests -xv', shell=True)
+@manager.option('-w', '--where', help='Requirement file', default=None)
+def test(where):
+	"""Run nose tests"""
+	cmd = "nosetests -xvw %s" % where if where else "nosetests -xv"
+	return call(cmd, shell=True)
 
 
 @manager.option('-r', '--requirement', help='Requirement file', default='test')
