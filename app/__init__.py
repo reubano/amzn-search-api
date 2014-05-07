@@ -119,7 +119,6 @@ def create_app(config_mode=None, config_file=None):
 
 	@app.route('/api/reset/')
 	@app.route('%s/reset/' % app.config['API_URL_PREFIX'])
-	@cache.cached(timeout=search_cache_timeout)
 	def reset():
 		cache.clear()
 		return jsonify(objects="Caches reset")
