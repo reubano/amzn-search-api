@@ -24,14 +24,3 @@ after_success:
 - if [[ "$TRAVIS_BRANCH" == "master" ]]; then yes | git push production master; fi
 - if [[ "$TRAVIS_BRANCH" == "features" ]]; then yes | git push staging features:master;
   fi
-env:
-  global:
-  - secure: iEsaA6sDaV4NDGD6H6ivmr04UMmnMAclzEqesuB/lg/ge7xhYqwmpFuQXI1ZnojrUP4kWfNlAUitNa4CQxxA0iPnHAsnmSXPv9h7K/iltL99CiyKA6xZ0c675p1O/OI4Efe7tKaOKdEXz4I8uPbxxGVTMVpH4/TQJqwpSnFwhGM=
-  - secure: kCSKZw4q5aHCDqkFf277dupkgfx1rLPJq2HPKMWTQU+n+aDm6FsVc6R6e0Y5mzseaj6lKyAwwriCH/+jYUejSLP4hoa4MhvIxIYrOar9YjEG8Gj0Xix6T8Cxli2AHF6jxktBjokegLguYhYR3tCyJw4MWMRLl7Gg+bbaYRjhQAE=
-  - secure: ZcsuZAHwhD0S3by2L88vH0FVM6vo3gTyilD4LGi8YmRH+XMP6UFj5cxnlSRBqNdVuJJeoAIsVFhudtuJ/mi6keT8NCCAg68HPgTsdkE0qXHx55+O+P2eOgeDJfbzPgy6o5cU8yMpWmOnLBs1e09fbk5A/HIzWd9g+qF+VP1ZbOg=
-  - secure: e0WrSUqUhQucECxVTS3DnIE+f+wPaFEobQ/Hpj3Rod5bWEUfykh0eGPEi/j8TK162c6b4fEDX1btYiqw5LjrYvCTVgP+RarhRYyrrzjdVtZtx59VlrzNZHWftmC5vJ4o8dFlCUUM1Qo/03vy7LYFoW13mtEz6N2SXjIjrREe76U=
-  - secure: YcHLMT2O9B7LkzEsPNko4CS9q5D+xwNpVxOtMCxNNBTq8Lm/eP4y9iNwLlQjByikLY4KcD35HMqhnDLa/dpuy7UBKzfqZ41lLXRzjcvBc0eKqmnuaqawmJnxbbSecugUMuSlJhI+H+kI7/Nn5kpncg0MoqkqJWU4sqDgwC3we1E=
-  - secure: grVg0APPbB06l7xPDoNx2Yry4A7MwGaNkn5nAISLob95Uy8vBctvaxh/WbXfY4OjVLhIbkbStOrqcHE2BVMvy3ix7FIO1jRX69D8U811Ivhd7lE3xzyguhRQWphHfcumIXe2Fq6kzaVKQ/0Jc3m3BKZFLFuZECS1KERrM+4zcxA=
-  - secure: G+CgSTUR6hpDbcu5ckTCX8+olLiIXWcZT6taPSqVjPFYxEnnXYDavq5IKuFAMRM5TfBJLARbkG+yqI9VircnNWappzD6fR1QyV+EKc4xXPcOSfBL4/egZBqQrME7oXSSufs2BHJjlOM5Ml9sDlGWzUyV6NeSZNiL9swU5EQ9j0s=
-  - secure: aSd/bCQxBdLcl4cBg7MCGEtfDdFi0gPvY2LhK40XfmiHKOSsfUoqpRddjGLbH6sh/CK0mJUs9rBo27ANASifPi6kTJibI8CaCgeJ+nBOAW2tXX7DzIfL8bIcQn0Ed6sLIcma1us4AitfoM8N/TaZIZXR+8dAeC3dlc5le7IRAUI=
-  - secure: NjVrEFlq0JW2sUHM5WWWdmsIDD9H9PsPAub70NSBMM3ZZYBoY8f3ocz2beB/f+EQQxoDK/D3MFq2SCgh95EbG7WdGdaiUZXWBkwdxl+DiwreUnlP+nQAG8C6B6BYMUdDdOWJGjMh0R9ZZfbyiVXp/aercc29NkiRsaf/SKZD4vA=
