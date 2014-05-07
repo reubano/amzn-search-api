@@ -24,10 +24,11 @@ def lint(file):
 	return call("flake8 %s" % file, shell=True)
 
 
-@manager.option('-w', '--where', help='Requirement file', default='')
+@manager.option('-w', '--where', help='Requirement file', default=None)
 def test(where):
 	"""Run nose tests"""
-	return call("nosetests -xvw %s" % where, shell=True)
+	cmd = "nosetests -xvw %s" % where if where else "nosetests -xv"
+	return call(cmd, shell=True)
 
 
 @manager.option('-r', '--requirement', help='Requirement file', default='test')
