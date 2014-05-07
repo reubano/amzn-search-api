@@ -18,7 +18,7 @@ class Amazon(AmazonAPI):
 		secret : AWS_SECRET_ACCESS_KEY
 		tag : AWS_ASSOCIATE_TAG
 		region : string
-			one of  ['US', 'FR', 'UK', 'CA', 'DE', 'JP', 'IT', 'ES']
+			one of  ['US', 'UK', 'FR', 'DE', 'IT', 'ES', 'CA', 'JP']
 
 		Keyword Arguments
 		-----------------
