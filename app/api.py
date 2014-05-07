@@ -33,6 +33,7 @@ class Amazon(AmazonAPI):
 		>>> Amazon()  #doctest: +ELLIPSIS
 		<app.api.Amazon object at 0x...>
 		"""
+		self.region = region
 		key = kwargs.pop('key', getenv('AWS_ACCESS_KEY_ID'))
 		secret = kwargs.pop('secret', getenv('AWS_SECRET_ACCESS_KEY'))
 		tag = kwargs.pop('tag', getenv('AWS_ASSOCIATE_TAG_%s' % region, 'na'))
@@ -76,6 +77,7 @@ class Amazon(AmazonAPI):
 				'url': r.offer_url,
 				'title': r.title,
 				'price': (r.price_and_currency[0] or 0),
+				'country': self.region,
 				'currency': r.price_and_currency[1],
 				'sales_rank': r._safe_get_element_text('SalesRank'),
 			}
