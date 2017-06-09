@@ -1,22 +1,32 @@
 sudo: false
 language: python
-python:
-  - "2.7"
-  - "3.5"
-  - "3.6"
+matrix:
+  include:
+    - python: '2.7'
+      install:
+        - pip install -U pip
+        - pip install wheel
+        - pip install -r dev-requirements.txt
+        - pip install -r py2-requirements.txt
+    - python: '3.5'
+      install:
+        - pip install -U pip
+        - pip install wheel
+        - pip install -r dev-requirements.txt
+        - pip install -r requirements.txt
+    - python: '3.6'
+      install:
+        - pip install -U pip
+        - pip install wheel
+        - pip install -r dev-requirements.txt
+        - pip install -r requirements.txt
+      addons:
+        apt:
+          sources: heroku
+          packages: heroku-toolbelt
 notifications:
   email:
     on_success: always
-install:
-- pip install -U pip
-- pip install wheel
-- pip install -r dev-requirements.txt
-- |
-  if [[ "$TRAVIS_PYTHON_VERSION" == *"3"* ]]; then
-    pip install -r requirements.txt
-  else
-    pip install -r py2-requirements.txt
-  fi
 script:
 - manage lint && manage test
 env:
@@ -30,7 +40,6 @@ after_success:
   - if [[ "$TRAVIS_PULL_REQUEST" == "true" ]]; then exit 0; fi
   - if [[ "$TRAVIS_BRANCH" != "master" ]]; then exit 0; fi
   - if [[ "$TRAVIS_PYTHON_VERSION" != "3.6" ]]; then exit 0; fi
-  - wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
   - git remote add heroku git@heroku.com:amzn-search-api.git
   - echo "Host heroku.com" >> ~/.ssh/config
   - echo "   StrictHostKeyChecking no" >> ~/.ssh/config
