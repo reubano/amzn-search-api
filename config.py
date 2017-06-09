@@ -54,7 +54,8 @@ class Config(object):
         SSLIFY_SUBDOMAINS = True
 
     API_METHODS = ['GET']
-    API_MAX_RESULTS_PER_PAGE = 1000
+    API_RESULTS_PER_PAGE = 32
+    API_MAX_RESULTS_PER_PAGE = 1024
     API_URL_PREFIX = '/api/v1'
     SWAGGER_URL = ''
     SWAGGER_JSON = 'swagger.json'
