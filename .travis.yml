@@ -24,6 +24,9 @@ matrix:
         apt:
           sources: heroku
           packages: heroku-toolbelt
+cache:
+  directories:
+    - ~/.cache/pip
 notifications:
   email:
     on_success: always
