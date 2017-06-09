@@ -1,29 +1,28 @@
+sudo: false
 language: python
 python:
-- '2.7'
+  - "2.7"
+  - "3.5"
+  - "3.6"
+
 notifications:
   email:
     on_success: always
-install: pip install -r requirements/test.txt
-script: python manage.py test
-after_success:
-- if [[ "$TRAVIS_PULL_REQUEST" == "true" ]]; then exit 0; fi
-- if [[ "$TRAVIS_PYTHON_VERSION" != "2.7" ]]; then exit 0; fi
-- wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
-- REPO_NAME=`basename $TRAVIS_REPO_SLUG`
-- if [[ "$TRAVIS_BRANCH" == "master" ]]; then git remote add production git@heroku.com:${REPO_NAME}.git;
-  fi
-- if [[ "$TRAVIS_BRANCH" == "features" ]]; then git remote add staging git@heroku.com:${REPO_NAME}-stage.git;
-  fi
-- echo "Host heroku.com" >> ~/.ssh/config
-- echo "   StrictHostKeyChecking no" >> ~/.ssh/config
-- echo "   CheckHostIP no" >> ~/.ssh/config
-- echo "   UserKnownHostsFile=/dev/null" >> ~/.ssh/config
-- heroku keys:clear
-- yes | heroku keys:add
-- if [[ "$TRAVIS_BRANCH" == "master" ]]; then yes | git push production master; fi
-- if [[ "$TRAVIS_BRANCH" == "features" ]]; then yes | git push staging features:master;
-  fi
+
+install:
+  - pip install -U pip
+  - pip install wheel
+  - pip install -r dev-requirements.txt
+  - |
+      if [[ "$TRAVIS_PYTHON_VERSION" == *"3"* ]]; then
+        pip install -r requirements.txt
+      else
+        pip install -r py2-requirements.txt
+      fi
+
+script:
+  - manage lint && manage test
+
 env:
   global:
   - secure: dGF8dwamz+ECh9l3OsV7UcN89smeXmmjfr92ZnRD4xnnXYdFQyxN1Rz4xJ/gyrYx1jLIept5NfazZcaIXavw+D1QpZwlM+9PBmFeaDg4soYv+atO3I53NBRnOGYh8GfoqKNlNRW3LiI7ilpGP2s1KGS8VBxGtbHt/wT/60xbuSg=
@@ -35,3 +34,17 @@ env:
   - secure: CfxRkbv8EyT6qHZJ8EGACJcMQh80RwbM/mjlqdTPLet7/pFP3zjj66a/XGeMhehOnBe+miJQ42gq4H52a3CVJJ1sDOOFKNEnHv9rdFvHdkbpFvHp61LM1rV9Dojzv8Fx+0K/LnTGaY6v5QmuRlTVI5Yj7JwgP130mBPU0MzlIqY=
   - secure: KqamFyjGnLBK6aeAregbDoSTtTx8le+NiQZXCbAXIypCBShHfnxuIRaSA1cElSBUTWuRRijesQDx2UIXME0CRZwRvVNFPUqIAEBSddf4gouVvx/F1PsOcOSJnVLgMLonctkFNnRQJ3NBPyxr2xwzRw+aYuRKE1cbVPQWm0BrvG4=
   - secure: QLufmSRuPXKLv9cFKEdgPcfDUhxrcrXcHw63oahB89l9dYIJvbG39P3zMVMxuntCsyurxZVNRb0SypHZQM7lEK9r9wtYo92ftcjKGKrQemWRVBgXcg87Rgk+ELISIsnfb8APmqXszLfKtTzxV2K9cLmYnRD7VGWLWeCLJiRvEyU=
+
+after_success:
+  - if [[ "$TRAVIS_PULL_REQUEST" == "true" ]]; then exit 0; fi
+  - if [[ "$TRAVIS_BRANCH" != "master" ]]; then exit 0; fi
+  - if [[ "$TRAVIS_PYTHON_VERSION" != "3.6" ]]; then exit 0; fi
+  - wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
+  - git remote add heroku git@heroku.com:prometheus-api.git
+  - echo "Host heroku.com" >> ~/.ssh/config
+  - echo "   StrictHostKeyChecking no" >> ~/.ssh/config
+  - echo "   CheckHostIP no" >> ~/.ssh/config
+  - echo "   UserKnownHostsFile=/dev/null" >> ~/.ssh/config
+  - heroku keys:clear
+  - yes | heroku keys:add
+  - yes | git push heroku master
