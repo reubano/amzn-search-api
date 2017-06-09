@@ -40,7 +40,7 @@ after_success:
   - if [[ "$TRAVIS_BRANCH" != "master" ]]; then exit 0; fi
   - if [[ "$TRAVIS_PYTHON_VERSION" != "3.6" ]]; then exit 0; fi
   - wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
-  - git remote add heroku git@heroku.com:prometheus-api.git
+  - git remote add heroku git@heroku.com:amzn-search-api.git
   - echo "Host heroku.com" >> ~/.ssh/config
   - echo "   StrictHostKeyChecking no" >> ~/.ssh/config
   - echo "   CheckHostIP no" >> ~/.ssh/config

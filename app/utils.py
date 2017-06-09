@@ -6,10 +6,20 @@
     Provides misc utility functions
 """
 from json import loads, dumps
-from json.decoder import JSONDecodeError
+
+try:
+    from json.decoder import JSONDecodeError
+except ImportError:
+    JSONDecodeError = ValueError
+
+try:
+    from time import monotonic
+except ImportError:
+    from time import time as monotonic
+
 from ast import literal_eval
 from datetime import datetime as dt, timedelta
-from time import monotonic
+
 from functools import wraps
 
 import requests
