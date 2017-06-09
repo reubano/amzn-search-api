@@ -30,7 +30,7 @@ from app.helper import gen_tables
 
 from builtins import *  # noqa  # pylint: disable=unused-import
 
-__version__ = '1.4.0'
+__version__ = '1.4.1'
 
 __title__ = 'AMZN Search API'
 __package_name__ = 'amzn-search-api'

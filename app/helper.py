@@ -32,6 +32,6 @@ def gen_tables(view_functions, SWAGGER_EXCLUDE_ROUTES=None, **kwargs):
                     'columns': list(gen_fields(tree)),
                     'name': func_name,
                     'desc': next(tree.iter(tag='paragraph')).text,
-                    'tag': 'GET',
+                    'tag': 'Amazon' if func_name == 'search' else 'Cache',
                     'rtype': '{}_result'.format(func_name),
                     'list': func_name == 'search'}
