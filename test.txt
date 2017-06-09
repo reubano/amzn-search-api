@@ -1,2 +1,1 @@
 -r common.txt
-wheel==0.22.0

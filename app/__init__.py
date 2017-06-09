@@ -1,145 +1,138 @@
 # -*- coding: utf-8 -*-
 """
-	app
-	~~~~~~~~~~~~~~
+    app
+    ~~~
 
-	Provides the flask application
+    Provides the flask application
+
+    ###########################################################################
+    # WARNING: if running on a a staging server, you MUST set the 'STAGE' env
+    # heroku config:set STAGE=true --remote staging
+    ###########################################################################
 """
+from __future__ import (
+    absolute_import, division, print_function, unicode_literals)
+
 import config
 
 from os import getenv
-from json import JSONEncoder, dumps
-from api import Amazon
-from amazon.api import SearchException
-from urllib2 import HTTPError
-from flask import Flask, redirect, url_for, request, make_response
-from flask.ext.cache import Cache
-from loremipsum import get_sentences
+from json import dumps
+from functools import partial
+
+from flask import Flask, send_from_directory, render_template
+from flask_caching import Cache
+from flask_compress import Compress
+from flask_cors import CORS
+from flask_sslify import SSLify
+
+from app.frs import Swaggerify
+from app.helper import gen_tables
+
+from builtins import *  # noqa  # pylint: disable=unused-import
+
+__version__ = '1.4.0'
+
+__title__ = 'AMZN Search API'
+__package_name__ = 'amzn-search-api'
+__author__ = 'Reuben Cummings'
+__description__ = 'RESTful API for searching Amazon sites'
+__email__ = 'reubano@gmail.com'
+__license__ = 'MIT'
+__copyright__ = 'Copyright 2017 Reuben Cummings'
 
 cache = Cache()
-search_cache_timeout = 1 * 60 * 60  # hours (in seconds)
+compress = Compress()
+swag = Swaggerify()
 
-
-def jsonify(status=200, indent=2, sort_keys=True, **kwargs):
-	options = {'indent': indent, 'sort_keys': sort_keys}
-	response = make_response(dumps(kwargs, cls=CustomEncoder, **options))
-	response.headers['Content-Type'] = 'application/json; charset=utf-8'
-	response.headers['mimetype'] = 'application/json'
-	response.status_code = status
-	return response
-
-
-def corsify(response, methods):
-	base = 'HEAD, OPTIONS'
-	headers = 'Origin, X-Requested-With, Content-Type, Accept'
-
-	for m in methods:
-		base += ', %s' % m
-
-	response.headers['Access-Control-Allow-Origin'] = '*'
-	response.headers['Access-Control-Allow-Methods'] = base
-	response.headers['Access-Control-Allow-Headers'] = headers
-	response.headers['Access-Control-Allow-Credentials'] = 'true'
-	return response
-
-
-def make_cache_key(*args, **kwargs):
-	return request.url
+CACHE_RESULT = [{'name': 'objects', 'desc': 'Success message', 'type': 'str'}]
+LOREM_RESULT = [{'name': 'objects', 'desc': 'Bacon sentence', 'type': 'str'}]
+SEARCH_RESULT = [
+    {
+        'name': 'asin', 'desc': 'Amazon Standard Identification Number',
+        'type': 'str'},
+    {'name': 'country', 'desc': 'Amazon site country', 'type': 'str'},
+    {'name': 'currency', 'desc': 'Currency', 'type': 'str'},
+    {'name': 'model', 'desc': 'Model number', 'type': 'str'},
+    {'name': 'price', 'desc': 'Amazon price', 'type': 'float'},
+    {'name': 'sales_rank', 'desc': 'Amazon sales rank', 'type': 'str'},
+    {'name': 'title', 'desc': 'Item title', 'type': 'str'},
+    {'name': 'url', 'desc': 'Affliate link', 'type': 'str'},
+]
 
 
 def create_app(config_mode=None, config_file=None):
-	# Create webapp instance
-	app = Flask(__name__)
-	cache_config = {}
+    # Create webapp instance
+    app = Flask(__name__)
+    app.register_blueprint(blueprint)
+    CORS(app)
+    compress.init_app(app)
+    cache_config = {}
 
-	if config_mode:
-		app.config.from_object(getattr(config, config_mode))
-	elif config_file:
-		app.config.from_pyfile(config_file)
-	else:
-		app.config.from_envvar('APP_SETTINGS', silent=True)
+    if config_mode:
+        app.config.from_object(getattr(config, config_mode))
+    elif config_file:
+        app.config.from_pyfile(config_file)
+    else:
+        app.config.from_envvar('APP_SETTINGS', silent=True)
 
-	if app.config['HEROKU']:
-		cache_config['CACHE_TYPE'] = 'spreadsaslmemcachedcache'
-		cache_config['CACHE_MEMCACHED_SERVERS'] = [getenv('MEMCACHIER_SERVERS')]
-		cache_config['CACHE_MEMCACHED_USERNAME'] = getenv('MEMCACHIER_USERNAME')
-		cache_config['CACHE_MEMCACHED_PASSWORD'] = getenv('MEMCACHIER_PASSWORD')
-	elif app.config['DEBUG_MEMCACHE']:
-		cache_config['CACHE_TYPE'] = 'memcached'
-		cache_config['CACHE_MEMCACHED_SERVERS'] = [getenv('MEMCACHE_SERVERS')]
-	else:
-		cache_config['CACHE_TYPE'] = 'simple'
+    if app.config.get('SERVER_NAME'):
+        SSLify(app)
 
-	cache.init_app(app, config=cache_config)
+    if app.config['HEROKU']:
+        cache_config['CACHE_TYPE'] = 'saslmemcached'
+        cache_config['CACHE_MEMCACHED_SERVERS'] = [getenv('MEMCACHIER_SERVERS')]
+        cache_config['CACHE_MEMCACHED_USERNAME'] = getenv('MEMCACHIER_USERNAME')
+        cache_config['CACHE_MEMCACHED_PASSWORD'] = getenv('MEMCACHIER_PASSWORD')
+    elif app.config['DEBUG_MEMCACHE']:
+        cache_config['CACHE_TYPE'] = 'memcached'
+        cache_config['CACHE_MEMCACHED_SERVERS'] = [getenv('MEMCACHE_SERVERS')]
+    else:
+        cache_config['CACHE_TYPE'] = 'simple'
 
-	@app.route('/')
-	def home():
-		return redirect(url_for('api'))
+    cache.init_app(app, config=cache_config)
 
-	@app.route('/api/')
-	@app.route('%s/' % app.config['API_URL_PREFIX'])
-	def api():
-		return 'Welcome to the %s!' % app.config['APP_NAME']
+    skwargs = {
+        'name': app.config['APP_NAME'], 'version': __version__,
+        'description': __description__}
 
-	@app.route('/api/search/')
-	@app.route('%s/search/' % app.config['API_URL_PREFIX'])
-	@cache.cached(timeout=search_cache_timeout, key_prefix=make_cache_key)
-	def search():
-		kwargs = request.args.to_dict()
-		limit = int(kwargs.pop('limit', 1))
-		amazon = Amazon(**kwargs)
+    swag.init_app(app, **skwargs)
 
-		new = {
-			'Condition': 'New',
-			'SearchIndex': 'All',
-			'ResponseGroup': 'Medium',
-		}
+    swag_config = {
+        'dom_id': '#swagger-ui',
+        'url': app.config['SWAGGER_JSON'],
+        'layout': 'StandaloneLayout'}
 
-		kwargs.update(new)
+    context = {
+        'base_url': app.config['SWAGGER_URL'],
+        'app_name': app.config['APP_NAME'],
+        'config_json': dumps(swag_config)}
 
-		try:
-			response = amazon.search_n(limit, **kwargs)
-			result = amazon.parse(response)
-			status = 200
-		except SearchException as err:
-			result = err.message
-			status = 500
-		except HTTPError:
-			result = 'Service Unavailable'
-			status = 503
+    @app.route('/')
+    @app.route('/<path:path>/')
+    @app.route('{API_URL_PREFIX}/'.format(**app.config))
+    @app.route('{API_URL_PREFIX}/<path:path>/'.format(**app.config))
+    def home(path=None):
+        if not path or path == 'index.html':
+            return render_template('index.html', **context)
+        else:
+            print('showing {}'.format(path))
+            return send_from_directory('static', path)
 
-		return jsonify(status, objects=result)
+    exclude = app.config['SWAGGER_EXCLUDE_COLUMNS']
+    create_docs = partial(swag.create_docs, exclude_columns=exclude)
+    create_defs = partial(create_docs, skip_path=True)
 
-	@app.route('/api/lorum/')
-	@app.route('%s/lorum/' % app.config['API_URL_PREFIX'])
-	@cache.cached(timeout=search_cache_timeout, key_prefix=make_cache_key)
-	def lorum():
-		return jsonify(objects=get_sentences(1)[0])
+    create_defs({'columns': CACHE_RESULT, 'name': 'reset_result'})
+    create_defs({'columns': CACHE_RESULT, 'name': 'delete_result'})
+    create_defs({'columns': LOREM_RESULT, 'name': 'lorem_result'})
+    create_defs({'columns': SEARCH_RESULT, 'name': 'search_result'})
 
-	@app.route('/api/delete/<base>/')
-	@app.route('%s/delete/<base>/' % app.config['API_URL_PREFIX'])
-	def delete(base):
-		url = request.url.replace('delete/', '')
-		cache.delete(url)
-		return jsonify(objects="Key: %s deleted" % url)
+    with app.app_context():
+        for table in gen_tables(app.view_functions, **app.config):
+            create_docs(table)
 
-	@app.route('/api/reset/')
-	@app.route('%s/reset/' % app.config['API_URL_PREFIX'])
-	def reset():
-		cache.clear()
-		return jsonify(objects="Caches reset")
-
-	@app.after_request
-	def add_cors_header(response):
-		return corsify(response, app.config['API_METHODS'])
-
-	return app
+    return app
 
 
-class CustomEncoder(JSONEncoder):
-	def default(self, obj):
-		if set(['quantize', 'year']).intersection(dir(obj)):
-			return str(obj)
-		elif set(['next', 'union']).intersection(dir(obj)):
-			return list(obj)
-		return JSONEncoder.default(self, obj)
+# put at bottom to avoid circular reference errors
+from app.views import blueprint  # noqa
