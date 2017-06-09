@@ -32,7 +32,7 @@ Flask Extensions
 Production Server
 ^^^^^^^^^^^^^^^^^
 
-- `Memcached <https://memcached.org/`_
+- `Memcached <https://memcached.org/>`_
 - `gunicorn <https://gunicorn.org/>`_
 - `gevent <https://www.gevent.org/>`_
 
@@ -42,7 +42,7 @@ Quick Start
 Preparation
 ^^^^^^^^^^^
 
-Check that the correct version of Python is installed
+*Check that the correct version of Python is installed*
 
 .. code-block:: bash
 
@@ -211,7 +211,10 @@ Advanced Installation
 Production Server
 ^^^^^^^^^^^^^^^^^
 
-Getting Gevent up and running is a bit tricky so follow these instructions carefully.
+Preparation
+~~~~~~~~~~~
+
+Getting ``gevent`` up and running is a bit tricky so follow these instructions carefully.
 
 To use ``gevent``, you first need to install ``libevent``.
 
@@ -237,6 +240,10 @@ To use ``gevent``, you first need to install ``libevent``.
 
 `download on Rudix <http://rudix.org/packages-jkl.html#libevent>`_
 
+
+Installation
+~~~~~~~~~~~~
+
 Now that libevent is handy, *install the remaining requirements*
 
 .. code-block:: bash
@@ -249,6 +256,9 @@ Or via the following if you installed libevent from macports
 
     sudo CFLAGS="-I /opt/local/include -L /opt/local/lib" pip install gevent
     sudo pip install -r requirements.txt
+
+Foreman
+~~~~~~~
 
 Finally, *install foreman*
 
