@@ -4,37 +4,28 @@ python:
   - "2.7"
   - "3.5"
   - "3.6"
-
 notifications:
   email:
     on_success: always
-
 install:
-  - pip install -U pip
-  - pip install wheel
-  - pip install -r dev-requirements.txt
-  - |
-      if [[ "$TRAVIS_PYTHON_VERSION" == *"3"* ]]; then
-        pip install -r requirements.txt
-      else
-        pip install -r py2-requirements.txt
-      fi
-
+- pip install -U pip
+- pip install wheel
+- pip install -r dev-requirements.txt
+- |
+  if [[ "$TRAVIS_PYTHON_VERSION" == *"3"* ]]; then
+    pip install -r requirements.txt
+  else
+    pip install -r py2-requirements.txt
+  fi
 script:
-  - manage lint && manage test
-
+- manage lint && manage test
 env:
   global:
-  - secure: dGF8dwamz+ECh9l3OsV7UcN89smeXmmjfr92ZnRD4xnnXYdFQyxN1Rz4xJ/gyrYx1jLIept5NfazZcaIXavw+D1QpZwlM+9PBmFeaDg4soYv+atO3I53NBRnOGYh8GfoqKNlNRW3LiI7ilpGP2s1KGS8VBxGtbHt/wT/60xbuSg=
-  - secure: G9O9ESCzdvPfPqcs4QYOmsYBK8mgmxFQ7Qye5NJmzp/ZZKRTmgqMX/D5HWVYV5W8fRRz4L6l0WksjofO+6g3bDmYmr6ZlPhQ+dTffiw/RAVWAgkKYL30ntvD+Whe89hGJ9rFEJoRoCOFMrICRXXsKEe2y+AmPMqzhWMY85NgML4=
-  - secure: GWbuuRVJ9VZcM2TI6zfKlDfV7XXp6pMEoZprSEpgFGzhUFt+3dZc8yG8SZ1k/81IQsC5eRAUuUJo25lDYhqy7wCBNoQjVbY+oIXRnSpNfFPMWMCjWKyi1mlE2Up4X2qoLA1MvW0+8XGI+nRs1WOAnW/zQo2BrJYw7xAGltMflOw=
-  - secure: Zb5gn4r6qCe1/azDIUUalpRWS/Iu8FTWK/D0CqH8i/nah3SQNJ37P7+1T4Z5BU0l9KHYr78VnHK1mR+SdN19PKCF+FYNzRfSDWTo97xgyXxr+FUKps14jjT2osgoLevsHyToRNJ0tYPHT4lhOyhk00NxJMDXc/lxilitXsnh0qw=
-  - secure: gBBHQUr2j2rybLpBzvDtN5DfWm5jBnooJuAwIVI/kC3GYjE/ab9klgrflOVIKmbmKKJW+EUxuaR/HjE5A/jCv3uzTvVq7wjP4qyhco6GQby6yvvB23IB+Ll8DMorAku0PP/GsoEPZ/xglOcEToZyQ2683UtKVGTQ/MUx3KzR8Es=
-  - secure: VNlz3HAwXMkbhl890BHkH248VAL67pTkEHqsF5G6V2Y8krxWpFYPsfasvoUseH4yEYWwltswlj7qM3MfiSV2B9s+XX93WHG/Ls61kTiA4T+akmG6nyh/pbglBE/0x7GaLtg1IZgYwqAJhHDVeCiU8yWVGthnVXAOgrpfDwWJ3lA=
-  - secure: CfxRkbv8EyT6qHZJ8EGACJcMQh80RwbM/mjlqdTPLet7/pFP3zjj66a/XGeMhehOnBe+miJQ42gq4H52a3CVJJ1sDOOFKNEnHv9rdFvHdkbpFvHp61LM1rV9Dojzv8Fx+0K/LnTGaY6v5QmuRlTVI5Yj7JwgP130mBPU0MzlIqY=
-  - secure: KqamFyjGnLBK6aeAregbDoSTtTx8le+NiQZXCbAXIypCBShHfnxuIRaSA1cElSBUTWuRRijesQDx2UIXME0CRZwRvVNFPUqIAEBSddf4gouVvx/F1PsOcOSJnVLgMLonctkFNnRQJ3NBPyxr2xwzRw+aYuRKE1cbVPQWm0BrvG4=
-  - secure: QLufmSRuPXKLv9cFKEdgPcfDUhxrcrXcHw63oahB89l9dYIJvbG39P3zMVMxuntCsyurxZVNRb0SypHZQM7lEK9r9wtYo92ftcjKGKrQemWRVBgXcg87Rgk+ELISIsnfb8APmqXszLfKtTzxV2K9cLmYnRD7VGWLWeCLJiRvEyU=
-
+  - secure: aJb+N5HgjalyBNeKIKYe1zl54lZRrcVdw2kt7lN4rDoD40z75FQAwvugWJxhSvPtzt+N+IHkxluStHtud3PwTp2Eb2AAAHOvI0Hz7vpSh9BRjK5uSzmOMTRXH6VCfu9NwbbcjrcB+xxl71EgUsucN7FVZTanqTaimrCA8+D2ang=
+  - secure: RqHPGhZWt9ebSL0hlbmkIrgxHAE+D15GUhAXd+yNZ590a6DhTlOtl34HSjVsE5rTWuHx5Biv/orqIcUjHecPjce9FanDo8IB/9Q3aEMoZE3StrJEIVzsz6PObUKw7fkcopjiqgimoCJbsYcDPn4OV5tnspmDFOP4KKojzVF6vYM=
+  - secure: Qq7tWageFTKOyDmikm2ye9HMjQA+SRU9/pGoatvP9dCsCCpIRY4tKL6psLDbMoZTWid7xyOzaGa5bZWms4bff6eFlwB0msNY1lJiQoh33Zixl7Vx+tfu836L8KHPKxxY16QY3z0tNR5ogrGs67cRwQqxyjlXTP9cbuwIL1K1zgU=
+  - secure: J3OHEHmmk6aXpK5Klx7vDXmcxOkN/ElY+y30WtVadp/AMfDr5KdTPseflLr+aaWmHbJXRiEj15+hzC78T+/VX7Qhm8J/uV+faVa0++z+f16vdJoTyTZZLHrkmLxDCRaayysIACvlU+V7WBRzxS8+nO2oj2ou+tMs8nMExRB+AME=
+  - secure: dlhfuDMaxc2lojkGhwJJVnS+sXvLXScq0cjQLZ6L7NlW+E52KGJz+UsDDu1/KU8w1gYexBvEeVkrNXCtqcrzYOs35R7K24eVSH69v1Olho1XYBr03l+/noEMrTYTIBmwMWEU0iTqYpwKuq6aaNVzS6A/3vr9USR2sGLUpttMYD4=
 after_success:
   - if [[ "$TRAVIS_PULL_REQUEST" == "true" ]]; then exit 0; fi
   - if [[ "$TRAVIS_BRANCH" != "master" ]]; then exit 0; fi
