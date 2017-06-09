@@ -3,11 +3,15 @@
 from __future__ import (
     absolute_import, division, print_function, unicode_literals)
 
+import pygogo as gogo
+
 from docutils.core import publish_doctree
 from xml.etree.ElementTree import fromstring
 from sphinxcontrib.napoleon.docstring import GoogleDocstring
 
-from builtins import *  # pylint: disable=F401
+from builtins import *  # noqa  # pylint: disable=unused-import
+
+logger = gogo.Gogo(__name__, monolog=True).logger
 
 
 class CustomDocstring(GoogleDocstring):
@@ -73,7 +77,7 @@ def parse_docblock(source, google_style=True):
 
     dom = doctree.asdom()
     xml = dom.toxml()
-    # print(dom.toprettyxml(indent='  '))
+    # logger.debug(dom.toprettyxml(indent='  '))
     return fromstring(xml)
 
 

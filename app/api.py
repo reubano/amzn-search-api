@@ -7,7 +7,7 @@ from __future__ import (
 
 from os import getenv
 from amazon.api import AmazonAPI
-from builtins import *  # pylint: disable=F401
+from builtins import *  # noqa  # pylint: disable=unused-import
 
 
 class Amazon(AmazonAPI):
@@ -39,9 +39,11 @@ class Amazon(AmazonAPI):
         <app.api.Amazon object at 0x...>
         """
         self.region = region
+        _tag = 'AWS_ASSOCIATE_TAG_{}'
+
         key = kwargs.pop('key', getenv('AWS_ACCESS_KEY_ID'))
         secret = kwargs.pop('secret', getenv('AWS_SECRET_ACCESS_KEY'))
-        tag = kwargs.pop('tag', getenv('AWS_ASSOCIATE_TAG_%s' % region, 'na'))
+        tag = kwargs.pop('tag', getenv(_tag.format(region), 'na'))
 
         if not (key and secret and tag):
             raise SystemExit('Error getting Amazon credentials.')

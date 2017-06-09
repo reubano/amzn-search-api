@@ -15,7 +15,7 @@ from operator import itemgetter
 import yaml
 
 from flask import jsonify, request, Blueprint
-from builtins import *  # pylint: disable=F401
+from builtins import *  # noqa  # pylint: disable=unused-import
 
 SWAGGER_TYPES = {
     'bool': 'bool',

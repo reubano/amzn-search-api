@@ -1,35 +1,57 @@
+# -*- coding: utf-8 -*-
+"""
+    config
+    ~~~~~~
+
+    Provides the flask config options
+    ###########################################################################
+    # WARNING: if running on a a staging server, you MUST set the 'STAGE' env
+    # heroku config:set STAGE=true --remote staging
+    ###########################################################################
+"""
 from os import getenv, path as p
-from slugify import slugify
+from datetime import timedelta
+from pkutils import parse_module
 
-# module vars
-_user = getenv('USER', getenv('USERNAME', 'default'))
-_basedir = p.dirname(__file__)
+PARENT_DIR = p.abspath(p.dirname(__file__))
+DAYS_PER_MONTH = 30
 
-# configurable vars
-__APP_NAME__ = 'AMZN Search API'
-__YOUR_NAME__ = 'Reuben Cummings'
-__YOUR_EMAIL__ = '%s@gmail.com' % _user
-__YOUR_WEBSITE__ = 'http://%s.github.com' % _user
+app = parse_module(p.join(PARENT_DIR, 'app', '__init__.py'))
+user = getenv('USER', 'user')
+
+__APP_NAME__ = app.__package_name__
+__EMAIL__ = app.__email__
+__DOMAIN__ = 'nerevu.com'
+__SUB_DOMAIN__ = __APP_NAME__.split('-')[-1]
+
+
+def get_seconds(seconds=0, months=0, **kwargs):
+    seconds = timedelta(seconds=seconds, **kwargs).total_seconds()
+
+    if months:
+        seconds += timedelta(DAYS_PER_MONTH).total_seconds() * months
+
+    return int(seconds)
 
 
 # configuration
 class Config(object):
-    app = slugify(__APP_NAME__)
-    stage = getenv('STAGE', False)
-    end = '-stage' if stage else ''
-    # TODO: programatically get app name
-    heroku_server = '%s%s.herokuapp.com' % (app, end)
-
-    APP_NAME = __APP_NAME__
     HEROKU = getenv('HEROKU', False)
     DEBUG = False
-    DEBUG_MEMCACHE = True
-    ADMINS = frozenset([__YOUR_EMAIL__])
     TESTING = False
+    DEBUG_MEMCACHE = True
+    ADMINS = frozenset([__EMAIL__])
     HOST = '127.0.0.1'
+    CACHE_TIMEOUT = get_seconds(minutes=60)
+    APP_NAME = __APP_NAME__
+
+    end = '-stage' if getenv('STAGE', False) else ''
 
     if HEROKU:
-        SERVER_NAME = heroku_server
+        SERVER_NAME = '{}{}.herokuapp.com'.format(APP_NAME, end)
+    elif getenv('DIGITALOCEAN'):
+        SERVER_NAME = '{}.{}'.format(__SUB_DOMAIN__, __DOMAIN__)
+        SSLIFY_SUBDOMAINS = True
 
     API_METHODS = ['GET']
     API_MAX_RESULTS_PER_PAGE = 1000
