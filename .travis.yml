@@ -33,6 +33,6 @@ env:
 deploy:
   provider: heroku
   api_key:
-    secure: Ro18iD4gcaKljqi/HyzRtQMXSheLSTPutys9u8gtw0ctfi1QDLItZzXQGd/y43bagXQyaZ8hH+GBWOr2S09te6s7XHWQG6iQxXvivs2xj+WjdJ9xNY4MCD/CzM4qBtY1DobVICV1xUk9D/9ryp80V3S+CFJ5n170WpUfqDOwvGU=
+    secure: OtAueASwNTuZ87qucn8uH4OnOCNJaSQPt1krNdbJIClb4MXltkiGHRnFJfYJWbKSB3DI8WnHVKaeftqRBa838fQWp9Hyl7F12NPE0stam2XMn8aWo9L/7OEOMk4If+pjRvCMYZu5jR354zTgzf7q2YMD8FtCUu6/zgQxcGjyZNs=
   on:
     python: '3.6'
