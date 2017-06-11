@@ -7,8 +7,8 @@ Flask-SSLify==0.1.5
 python-amazon-simple-product-api==1.5.0
 requests==2.13.0
 PyYAML==3.12
-pkutils>=0.13.6,<0.14.0
 docutils==0.13.1
 sphinxcontrib-napoleon==0.6.1
-meza>=0.37.0
-pygogo>=0.9.0
+pkutils>=0.13.6,<0.14.0
+meza>=0.37.0,<0.38.0
+pygogo>=0.9.0,<0.10.0
