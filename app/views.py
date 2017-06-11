@@ -47,11 +47,11 @@ def search():
         region (str): The localized Amazon site to search
             (one of ['US', 'UK'], default: 'US')
 
-        limit (int): Number of results to return (default: 1)
+        limit (int): Number of results to return (default: 10)
     """
     kwargs = request.args.to_dict()
     kwargs.setdefault('Keywords', kwargs.pop('q', None))
-    limit = int(kwargs.pop('limit', 1))
+    limit = int(kwargs.pop('limit', 10))
 
     extra = {
         'Condition': 'New', 'SearchIndex': 'All', 'ResponseGroup': 'Medium'}
