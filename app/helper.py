@@ -5,9 +5,12 @@
 
     Provides misc helper functions
 """
+from __future__ import (
+    absolute_import, division, print_function, unicode_literals)
 
 from inspect import getdoc
 from app.doc_parser import gen_fields, parse_docblock
+from builtins import *  # noqa  # pylint: disable=unused-import
 
 
 def gen_tables(view_functions, SWAGGER_EXCLUDE_ROUTES=None, **kwargs):

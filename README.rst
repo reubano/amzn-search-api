@@ -159,6 +159,8 @@ Example
 
 *Start production server on port 1000*
 
+.. code-block:: bash
+
     manage serve -p 1000 -m Production
 
 Configuration
@@ -248,14 +250,14 @@ Now that libevent is handy, *install the remaining requirements*
 
 .. code-block:: bash
 
-    sudo pip install -r requirements.txt
+    pip install -r requirements.txt
 
 Or via the following if you installed libevent from macports
 
 .. code-block:: bash
 
     sudo CFLAGS="-I /opt/local/include -L /opt/local/lib" pip install gevent
-    sudo pip install -r requirements.txt
+    pip install -r requirements.txt
 
 Foreman
 ~~~~~~~
@@ -326,7 +328,7 @@ Directory Structure
 
 .. code-block:: bash
 
-    $ tree . | sed 's/+----/├──/' | sed '/.pyc/d' | sed '/.DS_Store/d'
+    $ tree . | sed 's/+----/├──/; /.pyc/d; /.DS_Store/d'
     .
     ├── LICENSE
     ├── MANIFEST.in

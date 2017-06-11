@@ -5,6 +5,9 @@
 
     Provides additional api endpoints
 """
+from __future__ import (
+    absolute_import, division, print_function, unicode_literals)
+
 from random import choice
 
 try:
@@ -21,6 +24,8 @@ from app import cache
 from app.api import Amazon
 from app.utils import make_cache_key, jsonify, BACON_IPSUM, cache_header
 
+from builtins import *  # noqa  # pylint: disable=unused-import
+
 blueprint = Blueprint('blueprint', __name__)
 
 PREFIX = Config.API_URL_PREFIX
@@ -36,23 +41,22 @@ def search():
     """Perform an Amazon site search
 
     Kwargs:
-        Keywords (str): The search term(s) (either this or the 'Title'
-            parameter is required)
+        q (str): The search term (required)
 
-        Title (str): The search title (either this or the 'Keywords'
-            parameter is required)
+        condition (str): The item condition (one of ['New', 'Used'], default:
+            'New')
 
         region (str): The localized Amazon site to search
             (one of ['US', 'UK'], default: 'US')
 
-        limit (int): Number of results to return (default: 1)
+        limit (int): Number of results to return (default: 10)
     """
     kwargs = request.args.to_dict()
-    limit = int(kwargs.pop('limit', 1))
+    kwargs.setdefault('Keywords', kwargs.pop('q', None))
+    kwargs.setdefault('Condition', kwargs.pop('condition', 'New'))
+    limit = int(kwargs.pop('limit', 10))
 
-    extra = {
-        'Condition': 'New', 'SearchIndex': 'All', 'ResponseGroup': 'Medium'}
-
+    extra = {'SearchIndex': 'All', 'ResponseGroup': 'Medium'}
     kwargs.update(extra)
     amazon = Amazon(**kwargs)
 

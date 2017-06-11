@@ -33,6 +33,6 @@ def test_home(client):
 
 
 def test_search(client):
-    r = client.get('{}/search/?Keywords=lego'.format(client.prefix))
+    r = client.get('{}/search/?q=lego'.format(client.prefix))
     assert r.status_code == 200
     assert 'lego' in get_json(r)['objects'][0]['title'].lower()

@@ -30,7 +30,7 @@ from app.helper import gen_tables
 
 from builtins import *  # noqa  # pylint: disable=unused-import
 
-__version__ = '1.4.2'
+__version__ = '1.5.0'
 
 __title__ = 'AMZN Search API'
 __package_name__ = 'amzn-search-api'
@@ -108,14 +108,13 @@ def create_app(config_mode=None, config_file=None):
         'config_json': dumps(swag_config)}
 
     @app.route('/')
-    @app.route('/<path:path>/')
+    @app.route('/<path>/')
     @app.route('{API_URL_PREFIX}/'.format(**app.config))
-    @app.route('{API_URL_PREFIX}/<path:path>/'.format(**app.config))
+    @app.route('{API_URL_PREFIX}/<path>/'.format(**app.config))
     def home(path=None):
         if not path or path == 'index.html':
             return render_template('index.html', **context)
         else:
-            print('showing {}'.format(path))
             return send_from_directory('static', path)
 
     exclude = app.config['SWAGGER_EXCLUDE_COLUMNS']
