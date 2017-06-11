@@ -2,34 +2,25 @@ sudo: false
 language: python
 matrix:
   include:
-    - python: '2.7'
-      install:
-        - pip install -U pip
-        - pip install wheel
-        - pip install -r dev-requirements.txt
-        - pip install -r py2-requirements.txt
-    - python: '3.5'
-      install:
-        - pip install -U pip
-        - pip install wheel
-        - pip install -r dev-requirements.txt
-        - pip install -r requirements.txt
-    - python: '3.6'
-      install:
-        - pip install -U pip
-        - pip install wheel
-        - pip install -r dev-requirements.txt
-        - pip install -r requirements.txt
-      addons:
-        apt:
-          sources: heroku
-          packages: heroku-toolbelt
+  - python: '2.7'
+    install:
+    - pip install -r py2-requirements.txt
+  - python: '3.5'
+    install:
+    - pip install -r requirements.txt
+  - python: '3.6'
+    install:
+    - pip install -r requirements.txt
 cache:
   directories:
-    - ~/.cache/pip
+  - '~/.cache/pip'
 notifications:
   email:
     on_success: always
+before_install:
+- pip install -U pip
+- pip install wheel
+- pip install -r dev-requirements.txt
 script:
 - manage lint && manage test
 env:
@@ -39,15 +30,9 @@ env:
   - secure: Qq7tWageFTKOyDmikm2ye9HMjQA+SRU9/pGoatvP9dCsCCpIRY4tKL6psLDbMoZTWid7xyOzaGa5bZWms4bff6eFlwB0msNY1lJiQoh33Zixl7Vx+tfu836L8KHPKxxY16QY3z0tNR5ogrGs67cRwQqxyjlXTP9cbuwIL1K1zgU=
   - secure: J3OHEHmmk6aXpK5Klx7vDXmcxOkN/ElY+y30WtVadp/AMfDr5KdTPseflLr+aaWmHbJXRiEj15+hzC78T+/VX7Qhm8J/uV+faVa0++z+f16vdJoTyTZZLHrkmLxDCRaayysIACvlU+V7WBRzxS8+nO2oj2ou+tMs8nMExRB+AME=
   - secure: dlhfuDMaxc2lojkGhwJJVnS+sXvLXScq0cjQLZ6L7NlW+E52KGJz+UsDDu1/KU8w1gYexBvEeVkrNXCtqcrzYOs35R7K24eVSH69v1Olho1XYBr03l+/noEMrTYTIBmwMWEU0iTqYpwKuq6aaNVzS6A/3vr9USR2sGLUpttMYD4=
-after_success:
-  - if [[ "$TRAVIS_PULL_REQUEST" == "true" ]]; then exit 0; fi
-  - if [[ "$TRAVIS_BRANCH" != "master" ]]; then exit 0; fi
-  - if [[ "$TRAVIS_PYTHON_VERSION" != "3.6" ]]; then exit 0; fi
-  - git remote add heroku git@heroku.com:amzn-search-api.git
-  - echo "Host heroku.com" >> ~/.ssh/config
-  - echo "   StrictHostKeyChecking no" >> ~/.ssh/config
-  - echo "   CheckHostIP no" >> ~/.ssh/config
-  - echo "   UserKnownHostsFile=/dev/null" >> ~/.ssh/config
-  - heroku keys:clear
-  - yes | heroku keys:add
-  - yes | git push heroku master
+deploy:
+  provider: heroku
+  api_key:
+    secure: Ro18iD4gcaKljqi/HyzRtQMXSheLSTPutys9u8gtw0ctfi1QDLItZzXQGd/y43bagXQyaZ8hH+GBWOr2S09te6s7XHWQG6iQxXvivs2xj+WjdJ9xNY4MCD/CzM4qBtY1DobVICV1xUk9D/9ryp80V3S+CFJ5n170WpUfqDOwvGU=
+  on:
+    python: '3.6'
