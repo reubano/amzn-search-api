@@ -41,11 +41,8 @@ def search():
     """Perform an Amazon site search
 
     Kwargs:
-        Keywords (str): The search term(s) (either this or the 'Title'
-            parameter is required)
+        q (str): The search term (required)
 
-        Title (str): The search title (either this or the 'Keywords'
-            parameter is required)
 
         region (str): The localized Amazon site to search
             (one of ['US', 'UK'], default: 'US')
@@ -53,6 +50,7 @@ def search():
         limit (int): Number of results to return (default: 1)
     """
     kwargs = request.args.to_dict()
+    kwargs.setdefault('Keywords', kwargs.pop('q', None))
     limit = int(kwargs.pop('limit', 1))
 
     extra = {
