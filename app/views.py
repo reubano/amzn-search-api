@@ -5,6 +5,9 @@
 
     Provides additional api endpoints
 """
+from __future__ import (
+    absolute_import, division, print_function, unicode_literals)
+
 from random import choice
 
 try:
@@ -20,6 +23,8 @@ from config import Config
 from app import cache
 from app.api import Amazon
 from app.utils import make_cache_key, jsonify, BACON_IPSUM, cache_header
+
+from builtins import *  # noqa  # pylint: disable=unused-import
 
 blueprint = Blueprint('blueprint', __name__)
 

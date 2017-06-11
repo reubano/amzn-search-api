@@ -5,6 +5,9 @@
 
     Provides misc utility functions
 """
+from __future__ import (
+    absolute_import, division, print_function, unicode_literals)
+
 from json import loads, dumps
 
 try:
@@ -19,7 +22,6 @@ except ImportError:
 
 from ast import literal_eval
 from datetime import datetime as dt, timedelta
-
 from functools import wraps
 
 import requests
@@ -31,6 +33,8 @@ from http.client import responses
 from meza import fntools as ft
 
 from app import cache
+
+from builtins import *  # noqa  # pylint: disable=unused-import
 
 logger = gogo.Gogo(__name__, monolog=True).logger
 
