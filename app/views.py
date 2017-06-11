@@ -43,6 +43,8 @@ def search():
     Kwargs:
         q (str): The search term (required)
 
+        condition (str): The item condition (one of ['New', 'Used'], default:
+            'New')
 
         region (str): The localized Amazon site to search
             (one of ['US', 'UK'], default: 'US')
@@ -51,11 +53,10 @@ def search():
     """
     kwargs = request.args.to_dict()
     kwargs.setdefault('Keywords', kwargs.pop('q', None))
+    kwargs.setdefault('Condition', kwargs.pop('condition', 'New'))
     limit = int(kwargs.pop('limit', 10))
 
-    extra = {
-        'Condition': 'New', 'SearchIndex': 'All', 'ResponseGroup': 'Medium'}
-
+    extra = {'SearchIndex': 'All', 'ResponseGroup': 'Medium'}
     kwargs.update(extra)
     amazon = Amazon(**kwargs)
 
